@@ -15,7 +15,162 @@
 [build-system]
 requires = [
   "setuptools",
-  "wheel",
+  "meson-python",
   # Required for using org_tensorflow bazel repository.
   "numpy~=1.22.0",
 ]
+
+build-backend = "mesonpy"
+
+[project]
+name = "tensorflow-data-validation"
+authors = [
+  { name="Google LLC" },
+]
+description = "A library for exploring and validating machine learning data."
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Education',
+    'Intended Audience :: Science/Research',
+    'License :: OSI Approved :: Apache Software License',
+    'Operating System :: MacOS :: MacOS X',
+    'Operating System :: POSIX :: Linux',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3 :: Only',
+    'Topic :: Scientific/Engineering',
+    'Topic :: Scientific/Engineering :: Artificial Intelligence',
+    'Topic :: Scientific/Engineering :: Mathematics',
+    'Topic :: Software Development',
+    'Topic :: Software Development :: Libraries',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+]
+dependencies = [
+    'absl-py>=0.9,<2.0.0',
+    'apache-beam[gcp]>=2.53,<3;python_version>="3.11"',
+    'apache-beam[gcp]>=2.47,<3;python_version<"3.11"',
+    # TODO(b/139941423): Consider using multi-processing provided by
+    # Beam's DirectRunner.
+    'joblib>=1.2.0',  # Dependency for multi-processing.
+    'numpy>=1.22.0',
+    'pandas>=1.0,<2',
+    'protobuf>=4.25.2,<5;python_version>="3.11"',
+    'protobuf>=3.20.3,<5;python_version<"3.11"',
+    'pyarrow>=10,<11',
+    'pyfarmhash>=0.2.2,<0.4',
+    'six>=1.12,<2',
+    'tensorflow>=2.15,<2.16',
+    'tensorflow-metadata>=1.15.0,<1.16',
+    'tfx-bsl>=1.15,<1.16',
+]
+urls = { Homepage = "https://www.tensorflow.org/tfx/data_validation/get_started" }
+license = { file = 'LICENSE' }
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    "W",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # pep8 naming
+    "N",
+    # pydocstyle
+    "D",
+    # annotations
+    "ANN",
+    # debugger
+    "T10",
+    # flake8-pytest
+    "PT",
+    # flake8-return
+    "RET",
+    # flake8-unused-arguments
+    "ARG",
+    # flake8-fixme
+    "FIX",
+    # flake8-eradicate
+    "ERA",
+    # pandas-vet
+    "PD",
+    # numpy-specific rules
+    "NPY",
+]
+ignore = [
+    "D104", # Missing docstring in public package
+    "D100", # Missing docstring in public module
+    "D211", # No blank line before class
+    "D213", # Multiline summary second line
+    "PD901", # Avoid using 'df' for pandas dataframes. Perfectly fine in functions with limited scope
+    "ANN201", # Missing return type annotation for public function (makes no sense for NoneType return types...)
+    "ANN101", # Missing type annotation for `self`
+    "ANN204", # Missing return type annotation for special method
+    "ANN002", # Missing type annotation for `*args`
+    "ANN003", # Missing type annotation for `**kwargs`
+    "D105", # Missing docstring in magic method
+    "D203", # 1 blank line before after class docstring
+    "D204", # 1 blank line required after class docstring
+    "D413", # 1 black line after parameters
+    "SIM108", # Simplify if/else to one line; not always clearer
+    "D206", # Docstrings should be indented with spaces; unnecessary when running ruff-format
+    "E501", # Line length too long; unnecessary when running ruff-format
+    "W191", # Indentation contains tabs; unnecessary when running ruff-format
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"test_*.py" = ["ANN001"]
+
+[project.optional-dependencies]
+# dev = ["pre-commit>=3.6.0", 'cython', 'meson-python', 'setuptools-scm']
+# test = ["pytest", "pytest-env", "hypothesis", "packaging"]
+# doc = ["sphinx", "sphinx-multiversion", "myst-parser"]
+mutual-information = [
+    'scikit-learn>=1.0,<2',
+    'scipy>=1.5,<2',
+]
+visualization = [
+    'ipython>=7,<8'
+]
+all = [
+    'data-validation[mutual-information]',
+    'data-validation[visualization]',
+]
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib"
+
+[tool.mypy]
+allow_incomplete_defs = true  # FIXME
+allow_untyped_decorators = false
+allow_untyped_defs = true  # FIXME
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = ["*.tests.*"]
+allow_untyped_defs = true
