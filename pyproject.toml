@@ -27,6 +27,7 @@ name = "tensorflow-data-validation"
 authors = [
   { name="Google LLC" },
 ]
+version = '4.00'
 description = "A library for exploring and validating machine learning data."
 readme = "README.md"
 requires-python = ">=3.9"

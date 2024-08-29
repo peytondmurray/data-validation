@@ -1,0 +1,8 @@
+[wrap-git]
+url = https://github.com/tensorflow/metadata.git
+depth = 1
+revision = master
+patch_directory = tensorflow-metadata
+
+[provide]
+dependency_names = tensorflow_metadata

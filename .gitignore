@@ -127,3 +127,8 @@ dmypy.json
 
 # pb2.py files
 *_pb2.py
+
+# meson
+# Other repos pulled in for cpp dependencies
+subprojects/tensorflow-metadata
+subprojects/tfx-bsl
